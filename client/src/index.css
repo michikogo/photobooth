@@ -231,23 +231,89 @@ body {
   font-size: 1rem;
 }
 
-/* ── Strip page (placeholder) ── */
+/* ── Strip page ── */
 .strip-page {
   gap: 1.5rem;
 }
 
-.strip-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  border: 2.5px solid var(--ink);
+.strip-wrap {
+  border: 3px solid var(--ink);
   box-shadow: var(--shadow-lg);
-  padding: 8px;
   background: var(--ink);
+  padding: 8px;
+  transform: rotate(0.4deg);
 }
 
-.strip-thumb {
-  width: 300px;
-  height: auto;
+.strip-img {
   display: block;
+  width: 280px;
+}
+
+.strip-loading {
+  width: 280px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg);
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.strip-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── Email modal ── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 46, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-card {
+  max-width: 360px;
+  width: 90%;
+  gap: 1rem;
+}
+
+.sketch-input {
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 2.5px solid var(--ink);
+  box-shadow: var(--shadow);
+  border-radius: 3px;
+  background: var(--bg);
+  color: var(--ink);
+  outline: none;
+}
+
+.sketch-input:focus {
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.modal-success {
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.modal-error {
+  color: var(--accent);
+  font-size: 1rem;
 }
