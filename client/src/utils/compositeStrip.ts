@@ -5,7 +5,7 @@ const PAD_Y = 24
 const GAP = 12
 const LABEL_H = 36
 
-function loadImage(src) {
+function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve) => {
     const img = new Image()
     img.onload = () => resolve(img)
@@ -13,18 +13,16 @@ function loadImage(src) {
   })
 }
 
-export async function compositeStrip(photos) {
+export async function compositeStrip(photos: string[]): Promise<string> {
   const canvas = document.createElement('canvas')
   canvas.width = PHOTO_W + PAD_X * 2
   canvas.height = PHOTO_H * photos.length + GAP * (photos.length - 1) + PAD_Y * 2 + LABEL_H
 
-  const ctx = canvas.getContext('2d')
+  const ctx = canvas.getContext('2d')!
 
-  // Background
   ctx.fillStyle = '#1a1a2e'
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  // Photos
   await document.fonts.load('700 16px Caveat')
   const images = await Promise.all(photos.map(loadImage))
 
@@ -33,7 +31,6 @@ export async function compositeStrip(photos) {
     ctx.drawImage(img, PAD_X, y, PHOTO_W, PHOTO_H)
   })
 
-  // Label
   const labelY = canvas.height - LABEL_H + 10
   ctx.fillStyle = '#faf7f0'
   ctx.font = '700 22px Caveat'

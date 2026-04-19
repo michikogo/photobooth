@@ -1,25 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import Countdown from '../components/Countdown.jsx'
-import SketchButton from '../components/SketchButton.jsx'
+import Countdown from '../components/Countdown.tsx'
+import SketchButton from '../components/SketchButton.tsx'
+
+type Phase = 'starting' | 'countdown' | 'snap' | 'done'
 
 const TOTAL_PHOTOS = 4
 
 export default function CameraPage() {
   const navigate = useNavigate()
   const { state } = useLocation()
-  const timer = state?.timer ?? 3
+  const timer = (state as { timer?: number } | null)?.timer ?? 3
 
-  const videoRef = useRef(null)
-  const canvasRef = useRef(null)
-  const streamRef = useRef(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const streamRef = useRef<MediaStream | null>(null)
 
-  const [phase, setPhase] = useState('starting') // starting | countdown | snap | done
+  const [phase, setPhase] = useState<Phase>('starting')
   const [countdown, setCountdown] = useState(timer)
-  const [photos, setPhotos] = useState([])
+  const [photos, setPhotos] = useState<string[]>([])
   const [photoIndex, setPhotoIndex] = useState(0)
 
-  // Start webcam
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       .then((stream) => {
@@ -33,28 +34,21 @@ export default function CameraPage() {
     return () => streamRef.current?.getTracks().forEach((t) => t.stop())
   }, [])
 
-  // Countdown logic
   useEffect(() => {
     if (phase !== 'countdown') return
-
-    if (countdown === 0) {
-      setPhase('snap')
-      return
-    }
-
+    if (countdown === 0) { setPhase('snap'); return }
     const id = setTimeout(() => setCountdown((c) => c - 1), 1000)
     return () => clearTimeout(id)
   }, [phase, countdown])
 
-  // Capture photo when phase === 'snap'
   useEffect(() => {
     if (phase !== 'snap') return
 
-    const video = videoRef.current
-    const canvas = canvasRef.current
+    const video = videoRef.current!
+    const canvas = canvasRef.current!
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
-    canvas.getContext('2d').drawImage(video, 0, 0)
+    canvas.getContext('2d')!.drawImage(video, 0, 0)
     const dataUrl = canvas.toDataURL('image/png')
 
     const next = [...photos, dataUrl]
@@ -76,7 +70,6 @@ export default function CameraPage() {
       <div className="camera-wrap">
         <video ref={videoRef} autoPlay playsInline className="viewfinder" />
         <canvas ref={canvasRef} style={{ display: 'none' }} />
-
         {phase === 'countdown' && <Countdown value={countdown} />}
         {phase === 'snap' && <div className="flash" />}
       </div>
@@ -84,7 +77,10 @@ export default function CameraPage() {
       <div className="camera-footer">
         <div className="photo-dots">
           {Array.from({ length: TOTAL_PHOTOS }).map((_, i) => (
-            <span key={i} className={`dot ${i < photos.length ? 'taken' : ''} ${i === photoIndex && phase === 'countdown' ? 'active' : ''}`} />
+            <span
+              key={i}
+              className={`dot ${i < photos.length ? 'taken' : ''} ${i === photoIndex && phase === 'countdown' ? 'active' : ''}`}
+            />
           ))}
         </div>
         <p className="camera-hint">

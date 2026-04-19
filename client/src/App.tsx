@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
-import MenuPage from './pages/MenuPage.jsx'
-import CameraPage from './pages/CameraPage.jsx'
-import StripPage from './pages/StripPage.jsx'
+import MenuPage from './pages/MenuPage.tsx'
+import CameraPage from './pages/CameraPage.tsx'
+import StripPage from './pages/StripPage.tsx'
 
 function App() {
   return (

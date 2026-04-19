@@ -1,10 +1,17 @@
 import { useState } from 'react'
-import { sendEmail } from '../utils/api.js'
-import SketchButton from './SketchButton.jsx'
+import { sendEmail } from '../utils/api.ts'
+import SketchButton from './SketchButton.tsx'
 
-export default function EmailModal({ stripDataUrl, onClose }) {
+type Status = 'idle' | 'sending' | 'success' | 'error'
+
+interface EmailModalProps {
+  stripDataUrl: string
+  onClose: () => void
+}
+
+export default function EmailModal({ stripDataUrl, onClose }: EmailModalProps) {
   const [email, setEmail] = useState('')
-  const [status, setStatus] = useState('idle') // idle | sending | success | error
+  const [status, setStatus] = useState<Status>('idle')
 
   async function handleSend() {
     if (!email) return

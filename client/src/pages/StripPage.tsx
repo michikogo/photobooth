@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { compositeStrip } from '../utils/compositeStrip.js'
-import { saveStrip } from '../utils/api.js'
-import EmailModal from '../components/EmailModal.jsx'
-import SketchButton from '../components/SketchButton.jsx'
+import { compositeStrip } from '../utils/compositeStrip.ts'
+import { saveStrip } from '../utils/api.ts'
+import EmailModal from '../components/EmailModal.tsx'
+import SketchButton from '../components/SketchButton.tsx'
 
 export default function StripPage() {
   const { state } = useLocation()
   const navigate = useNavigate()
-  const photos = state?.photos ?? []
+  const photos = (state as { photos?: string[] } | null)?.photos ?? []
 
-  const [stripDataUrl, setStripDataUrl] = useState(null)
+  const [stripDataUrl, setStripDataUrl] = useState<string | null>(null)
   const [showEmail, setShowEmail] = useState(false)
 
   useEffect(() => {
@@ -23,6 +23,7 @@ export default function StripPage() {
   }, [])
 
   function handleDownload() {
+    if (!stripDataUrl) return
     const a = document.createElement('a')
     a.href = stripDataUrl
     a.download = 'photobooth-strip.png'
@@ -46,7 +47,7 @@ export default function StripPage() {
         <SketchButton onClick={() => navigate('/')}>← Back</SketchButton>
       </div>
 
-      {showEmail && (
+      {showEmail && stripDataUrl && (
         <EmailModal stripDataUrl={stripDataUrl} onClose={() => setShowEmail(false)} />
       )}
     </div>

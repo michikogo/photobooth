@@ -1,9 +1,14 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import rough from 'roughjs'
 
-export default function SketchCard({ children, className = '' }) {
-  const svgRef = useRef(null)
-  const wrapRef = useRef(null)
+interface SketchCardProps {
+  children: ReactNode
+  className?: string
+}
+
+export default function SketchCard({ children, className = '' }: SketchCardProps) {
+  const svgRef = useRef<SVGSVGElement>(null)
+  const wrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const wrap = wrapRef.current
@@ -11,12 +16,12 @@ export default function SketchCard({ children, className = '' }) {
     if (!wrap || !svg) return
 
     function draw() {
-      const { width, height } = wrap.getBoundingClientRect()
-      svg.setAttribute('width', width)
-      svg.setAttribute('height', height)
-      svg.innerHTML = ''
+      const { width, height } = wrap!.getBoundingClientRect()
+      svg!.setAttribute('width', String(width))
+      svg!.setAttribute('height', String(height))
+      svg!.innerHTML = ''
 
-      const rc = rough.svg(svg)
+      const rc = rough.svg(svg!)
       const rect = rc.rectangle(4, 4, width - 8, height - 8, {
         stroke: '#1a1a2e',
         strokeWidth: 2.5,
@@ -24,7 +29,7 @@ export default function SketchCard({ children, className = '' }) {
         fillStyle: 'solid',
         fill: '#ffffff',
       })
-      svg.appendChild(rect)
+      svg!.appendChild(rect)
     }
 
     draw()
