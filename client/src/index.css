@@ -1,111 +1,253 @@
+/* ── Sketch / Excalidraw theme ── */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --bg: #faf7f0;
+  --ink: #1a1a2e;
+  --accent: #e8472a;
+  --accent2: #f5a623;
+  --white: #ffffff;
+  --shadow: 3px 3px 0 var(--ink);
+  --shadow-lg: 5px 5px 0 var(--ink);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Caveat', cursive;
 }
 
 body {
-  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100svh;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+/* ── Layout ── */
+.page {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1.5rem;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
+/* ── Sketch card ── */
+.sketch-card {
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  box-shadow: var(--shadow-lg);
   border-radius: 4px;
-  color: var(--text-h);
+  padding: 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 480px;
+  width: 100%;
+  transform: rotate(-0.4deg);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* ── Typography ── */
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  opacity: 0.7;
+}
+
+/* ── Sketch button ── */
+.sketch-btn {
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: var(--bg);
+  color: var(--ink);
+  border: 2.5px solid var(--ink);
+  box-shadow: var(--shadow);
+  border-radius: 3px;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  transform: rotate(-0.3deg);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.sketch-btn:hover {
+  transform: rotate(0.3deg) translate(-1px, -1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.sketch-btn:active {
+  transform: rotate(0deg) translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.sketch-btn.active {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.start-btn {
+  font-size: 1.5rem;
+  padding: 0.75rem 2rem;
+  background: var(--accent);
+  color: var(--white);
+  border-color: var(--ink);
+  width: 100%;
+}
+
+.start-btn:hover {
+  background: var(--accent);
+  filter: brightness(1.1);
+}
+
+/* ── Timer selector ── */
+.timer-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.timer-row label {
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.timer-options {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.timer-btn {
+  width: 60px;
+}
+
+/* ── Camera page ── */
+.camera-page {
+  gap: 1rem;
+}
+
+.camera-wrap {
+  position: relative;
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-lg);
+  border-radius: 4px;
+  overflow: hidden;
+  max-width: 640px;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #000;
+}
+
+.viewfinder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scaleX(-1);
+}
+
+/* ── Countdown overlay ── */
+.countdown-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.countdown-number {
+  font-size: 10rem;
+  font-weight: 700;
+  color: var(--white);
+  text-shadow: 4px 4px 0 var(--accent);
+  transform: rotate(-2deg);
+  animation: countPulse 0.9s ease-out forwards;
+}
+
+@keyframes countPulse {
+  from { transform: rotate(-2deg) scale(1.4); opacity: 1; }
+  to   { transform: rotate(-2deg) scale(0.9); opacity: 0.8; }
+}
+
+/* ── Flash ── */
+.flash {
+  position: absolute;
+  inset: 0;
+  background: white;
+  animation: flashOut 0.2s ease-out forwards;
+}
+
+@keyframes flashOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ── Camera footer ── */
+.camera-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.photo-dots {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2.5px solid var(--ink);
+  background: var(--bg);
+  transition: background 0.2s;
+}
+
+.dot.taken {
+  background: var(--ink);
+}
+
+.dot.active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.camera-hint {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.back-btn {
+  font-size: 1rem;
+}
+
+/* ── Strip page (placeholder) ── */
+.strip-page {
+  gap: 1.5rem;
+}
+
+.strip-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 2.5px solid var(--ink);
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+  background: var(--ink);
+}
+
+.strip-thumb {
+  width: 300px;
+  height: auto;
+  display: block;
 }
