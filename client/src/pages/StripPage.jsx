@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { compositeStrip } from '../utils/compositeStrip.js'
 import { saveStrip } from '../utils/api.js'
 import EmailModal from '../components/EmailModal.jsx'
+import SketchButton from '../components/SketchButton.jsx'
 
 export default function StripPage() {
   const { state } = useLocation()
@@ -40,15 +41,9 @@ export default function StripPage() {
       </div>
 
       <div className="strip-actions">
-        <button className="sketch-btn" onClick={handleDownload} disabled={!stripDataUrl}>
-          ⬇ Download
-        </button>
-        <button className="sketch-btn" onClick={() => setShowEmail(true)} disabled={!stripDataUrl}>
-          ✉ Email
-        </button>
-        <button className="sketch-btn" onClick={() => navigate('/')}>
-          ← Back
-        </button>
+        <SketchButton onClick={handleDownload} disabled={!stripDataUrl}>⬇ Download</SketchButton>
+        <SketchButton onClick={() => setShowEmail(true)} disabled={!stripDataUrl}>✉ Email</SketchButton>
+        <SketchButton onClick={() => navigate('/')}>← Back</SketchButton>
       </div>
 
       {showEmail && (
