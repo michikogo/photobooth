@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import SketchCard from '../components/SketchCard.jsx'
+import SketchButton from '../components/SketchButton.jsx'
 
 const TIMER_OPTIONS = [3, 5, 10]
 
@@ -9,12 +11,12 @@ export default function MenuPage() {
 
   return (
     <div className="page menu-page">
-      <div className="sketch-card">
+      <SketchCard>
         <h1 className="title">📷 Photobooth</h1>
         <p className="subtitle">Strike a pose. Make it count.</p>
 
         <div className="timer-row">
-          <label htmlFor="timer">Countdown timer</label>
+          <label>Countdown timer</label>
           <div className="timer-options">
             {TIMER_OPTIONS.map((s) => (
               <button
@@ -28,13 +30,10 @@ export default function MenuPage() {
           </div>
         </div>
 
-        <button
-          className="sketch-btn start-btn"
-          onClick={() => navigate('/camera', { state: { timer } })}
-        >
+        <SketchButton variant="primary" fullWidth onClick={() => navigate('/camera', { state: { timer } })}>
           Start Photobooth
-        </button>
-      </div>
+        </SketchButton>
+      </SketchCard>
     </div>
   )
 }

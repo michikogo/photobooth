@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { sendEmail } from '../utils/api.js'
+import SketchButton from './SketchButton.jsx'
 
 export default function EmailModal({ stripDataUrl, onClose }) {
   const [email, setEmail] = useState('')
@@ -22,7 +23,7 @@ export default function EmailModal({ stripDataUrl, onClose }) {
         {status === 'success' ? (
           <>
             <p className="modal-success">✉️ Sent! Check your inbox.</p>
-            <button className="sketch-btn" onClick={onClose}>Close</button>
+            <SketchButton onClick={onClose}>Close</SketchButton>
           </>
         ) : (
           <>
@@ -37,10 +38,10 @@ export default function EmailModal({ stripDataUrl, onClose }) {
             />
             {status === 'error' && <p className="modal-error">Something went wrong. Try again.</p>}
             <div className="modal-actions">
-              <button className="sketch-btn" onClick={onClose}>Cancel</button>
-              <button className="sketch-btn start-btn" onClick={handleSend} disabled={status === 'sending'}>
+              <SketchButton onClick={onClose}>Cancel</SketchButton>
+              <SketchButton variant="primary" onClick={handleSend} disabled={status === 'sending'}>
                 {status === 'sending' ? 'Sending...' : 'Send'}
-              </button>
+              </SketchButton>
             </div>
           </>
         )}

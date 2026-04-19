@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import Countdown from '../components/Countdown.jsx'
+import SketchButton from '../components/SketchButton.jsx'
 
 const TOTAL_PHOTOS = 4
 
@@ -92,7 +93,7 @@ export default function CameraPage() {
           {phase === 'snap' && 'Click!'}
           {phase === 'done' && 'All done!'}
         </p>
-        <button className="sketch-btn back-btn" onClick={() => navigate('/')}>← Back</button>
+        <SketchButton onClick={() => navigate('/')}>← Back</SketchButton>
       </div>
     </div>
   )
