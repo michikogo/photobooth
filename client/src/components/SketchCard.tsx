@@ -15,13 +15,13 @@ export default function SketchCard({ children, className = '' }: SketchCardProps
     const svg = svgRef.current
     if (!wrap || !svg) return
 
-    function draw() {
-      const { width, height } = wrap!.getBoundingClientRect()
-      svg!.setAttribute('width', String(width))
-      svg!.setAttribute('height', String(height))
-      svg!.innerHTML = ''
+    function draw(el: HTMLDivElement, svgEl: SVGSVGElement) {
+      const { width, height } = el.getBoundingClientRect()
+      svgEl.setAttribute('width', String(width))
+      svgEl.setAttribute('height', String(height))
+      svgEl.innerHTML = ''
 
-      const rc = rough.svg(svg!)
+      const rc = rough.svg(svgEl)
       const rect = rc.rectangle(4, 4, width - 8, height - 8, {
         stroke: '#1a1a2e',
         strokeWidth: 2.5,
@@ -29,11 +29,11 @@ export default function SketchCard({ children, className = '' }: SketchCardProps
         fillStyle: 'solid',
         fill: '#ffffff',
       })
-      svg!.appendChild(rect)
+      svgEl.appendChild(rect)
     }
 
-    draw()
-    const observer = new ResizeObserver(draw)
+    draw(wrap, svg)
+    const observer = new ResizeObserver(() => draw(wrap, svg))
     observer.observe(wrap)
     return () => observer.disconnect()
   }, [])
