@@ -44,11 +44,16 @@ export default function CameraPage() {
   useEffect(() => {
     if (phase !== 'snap') return
 
-    const video = videoRef.current!
-    const canvas = canvasRef.current!
+    const video = videoRef.current
+    const canvas = canvasRef.current
+    if (!video || !canvas) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
-    canvas.getContext('2d')!.drawImage(video, 0, 0)
+    ctx.drawImage(video, 0, 0)
     const dataUrl = canvas.toDataURL('image/png')
 
     const next = [...photos, dataUrl]
