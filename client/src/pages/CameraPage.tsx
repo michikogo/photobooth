@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import Countdown from '../components/Countdown.tsx'
 import SketchButton from '../components/SketchButton.tsx'
+import { playShutterSound } from '../utils/shutterSound.ts'
 
 type Phase = 'starting' | 'countdown' | 'snap' | 'done'
 
@@ -51,6 +52,7 @@ export default function CameraPage() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    playShutterSound()
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
     ctx.drawImage(video, 0, 0)
