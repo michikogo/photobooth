@@ -1,10 +1,10 @@
-function playNoise(
+const playNoise = (
   ctx: AudioContext,
   startTime: number,
   duration: number,
   gainValue: number,
   lowpassFreq: number,
-): void {
+): void => {
   const bufferSize = Math.floor(ctx.sampleRate * duration)
   const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
   const data = buffer.getChannelData(0)
@@ -29,7 +29,7 @@ function playNoise(
   source.start(startTime)
 }
 
-export function playShutterSound(): void {
+export const playShutterSound = (): void => {
   const ctx = new AudioContext()
 
   // Stage 1 — mirror slap: low thud at t=0
