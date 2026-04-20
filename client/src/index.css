@@ -299,7 +299,9 @@ body {
   color: var(--ink);
   border: none;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .toggle-opt + .toggle-opt {
@@ -328,7 +330,10 @@ body {
   font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.1s, filter 0.1s;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s,
+    filter 0.1s;
 }
 
 .booth-start:hover {
