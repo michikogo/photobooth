@@ -1,33 +1,33 @@
-import { useState } from 'react'
-import { sendEmail } from '../utils/api.ts'
-import SketchButton from './SketchButton.tsx'
+import React, { useState } from "react";
+import { sendEmail } from "../utils/api";
+import SketchButton from "./SketchButton";
 
-type Status = 'idle' | 'sending' | 'success' | 'error'
+type Status = "idle" | "sending" | "success" | "error";
 
 interface EmailModalProps {
-  stripDataUrl: string
-  onClose: () => void
+  stripDataUrl: string;
+  onClose: () => void;
 }
 
-export default function EmailModal({ stripDataUrl, onClose }: EmailModalProps) {
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<Status>('idle')
+const EmailModal = ({ stripDataUrl, onClose }: EmailModalProps) => {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
 
-  async function handleSend() {
-    if (!email) return
-    setStatus('sending')
+  const handleSend = async () => {
+    if (!email) return;
+    setStatus("sending");
     try {
-      await sendEmail(email, stripDataUrl)
-      setStatus('success')
+      await sendEmail(email, stripDataUrl);
+      setStatus("success");
     } catch {
-      setStatus('error')
+      setStatus("error");
     }
-  }
+  };
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-card sketch-card" onClick={(e) => e.stopPropagation()}>
-        {status === 'success' ? (
+        {status === "success" ? (
           <>
             <p className="modal-success">✉️ Sent! Check your inbox.</p>
             <SketchButton onClick={onClose}>Close</SketchButton>
@@ -41,18 +41,20 @@ export default function EmailModal({ stripDataUrl, onClose }: EmailModalProps) {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
             />
-            {status === 'error' && <p className="modal-error">Something went wrong. Try again.</p>}
+            {status === "error" && <p className="modal-error">Something went wrong. Try again.</p>}
             <div className="modal-actions">
               <SketchButton onClick={onClose}>Cancel</SketchButton>
-              <SketchButton variant="primary" onClick={handleSend} disabled={status === 'sending'}>
-                {status === 'sending' ? 'Sending...' : 'Send'}
+              <SketchButton variant="primary" onClick={handleSend} disabled={status === "sending"}>
+                {status === "sending" ? "Sending..." : "Send"}
               </SketchButton>
             </div>
           </>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default EmailModal;
