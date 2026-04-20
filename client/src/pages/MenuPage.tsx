@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import SketchCard from '../components/SketchCard.jsx'
-import SketchButton from '../components/SketchButton.jsx'
+import SketchCard from '../components/SketchCard.tsx'
+import SketchButton from '../components/SketchButton.tsx'
 
 const TIMER_OPTIONS = [3, 5, 10]
 
