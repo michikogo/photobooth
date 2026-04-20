@@ -461,7 +461,9 @@ body {
 
 /* ── Strip page ── */
 .strip-page {
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
 .strip-wrap {
@@ -474,7 +476,7 @@ body {
 
 .strip-img {
   display: block;
-  width: 280px;
+  width: 30svh;
 }
 
 .strip-loading {
@@ -488,11 +490,14 @@ body {
   opacity: 0.7;
 }
 
+.strip-title{
+  align-items: center;
+}
+
 .strip-actions {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
 /* ── Email modal ── */
