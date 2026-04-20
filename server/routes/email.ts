@@ -1,9 +1,9 @@
-import { Router, type Request, type Response } from 'express'
+import { Router, type Request, type Response } from "express";
 
-const router = Router()
+const router = Router();
 
-router.post('/', (_req: Request, res: Response) => {
-  res.json({ success: true })
-})
+router.post("/", (_req: Request, res: Response) => {
+  res.json({ success: true });
+});
 
-export default router
+export default router;

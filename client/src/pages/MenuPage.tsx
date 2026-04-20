@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import SketchCard from '../components/SketchCard.tsx'
-import SketchButton from '../components/SketchButton.tsx'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import SketchCard from "../components/SketchCard";
+import SketchButton from "../components/SketchButton";
 
-const TIMER_OPTIONS = [3, 5, 10]
+const TIMER_OPTIONS = [3, 5, 10];
 
-export default function MenuPage() {
-  const [timer, setTimer] = useState(3)
-  const navigate = useNavigate()
+const MenuPage = () => {
+  const [timer, setTimer] = useState(3);
+  const navigate = useNavigate();
 
   return (
     <div className="page menu-page">
@@ -21,7 +21,7 @@ export default function MenuPage() {
             {TIMER_OPTIONS.map((s) => (
               <button
                 key={s}
-                className={`sketch-btn timer-btn ${timer === s ? 'active' : ''}`}
+                className={`sketch-btn timer-btn ${timer === s ? "active" : ""}`}
                 onClick={() => setTimer(s)}
               >
                 {s}s
@@ -30,10 +30,16 @@ export default function MenuPage() {
           </div>
         </div>
 
-        <SketchButton variant="primary" fullWidth onClick={() => navigate('/camera', { state: { timer } })}>
+        <SketchButton
+          variant="primary"
+          fullWidth
+          onClick={() => navigate("/camera", { state: { timer } })}
+        >
           Start Photobooth
         </SketchButton>
       </SketchCard>
     </div>
-  )
-}
+  );
+};
+
+export default MenuPage;
