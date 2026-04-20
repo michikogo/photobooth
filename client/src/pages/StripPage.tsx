@@ -38,8 +38,6 @@ const StripPage = () => {
 
   return (
     <div className="page strip-page">
-      <h2>Your Strip</h2>
-
       <div className="strip-wrap">
         {stripDataUrl ? (
           <img src={stripDataUrl} alt="Photo strip" className="strip-img" />
@@ -49,6 +47,7 @@ const StripPage = () => {
       </div>
 
       <div className="strip-actions">
+        <h2 className="strip-title">Your Strip</h2>
         <SketchButton onClick={handleDownload} disabled={!stripDataUrl}>
           ⬇ Download
         </SketchButton>
