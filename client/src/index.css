@@ -551,58 +551,45 @@ body {
   font-size: 1rem;
 }
 
-/* ── Border modal ── */
-.border-modal {
-  max-width: 480px;
-}
-
-/* ── Border tray (footer) ── */
-.border-tray {
-  width: calc(100% + 6rem);
-  margin-left: -3rem;
-  margin-bottom: -2.5rem;
-  border-top: 2.5px solid var(--ink);
-  padding: 0.75rem 1rem;
-  background: var(--bg);
+/* ── Frames tray (left panel on StripPage) ── */
+.frames-tray {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  border-radius: 0 0 4px 4px;
-}
-
-.border-tray-label {
-  font-size: 0.95rem;
-  opacity: 0.6;
-}
-
-.border-tray-scroll {
-  display: flex;
   gap: 0.5rem;
-  overflow-x: auto;
-  min-height: 96px;
   align-items: center;
-  padding-bottom: 2px;
+  overflow-y: auto;
+  max-height: 80svh;
+  padding: 0.5rem 0.25rem;
 }
 
-.border-tray-thumb {
-  width: 32px;
-  height: 96px;
+.frames-tray-empty {
+  font-size: 0.85rem;
+  opacity: 0.4;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+.frames-tray-thumb {
+  width: 36px;
+  height: 108px;
   object-fit: cover;
   border: 2.5px solid var(--ink);
   border-radius: 2px;
   cursor: pointer;
   flex-shrink: 0;
-  transition: box-shadow 0.1s, transform 0.1s;
-  opacity: 0.8;
+  opacity: 0.7;
+  transition: opacity 0.1s, box-shadow 0.1s, transform 0.1s;
 }
 
-.border-tray-thumb:hover {
+.frames-tray-thumb:hover {
   opacity: 1;
   box-shadow: var(--shadow);
-  transform: translateY(-2px);
+  transform: translateX(2px);
 }
 
-.border-tray-thumb.selected {
+.frames-tray-thumb.selected {
   opacity: 1;
   border-color: var(--accent);
   box-shadow: 2px 2px 0 var(--accent);

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { generateBorder, getSessionBorders, ApiError } from "../utils/api";
+import React, { useState } from "react";
+import { generateBorder, ApiError } from "../utils/api";
 import type { SavedBorder } from "../utils/api";
 import SketchButton from "./SketchButton";
 
@@ -8,7 +8,7 @@ type Status = "idle" | "loading" | "error";
 interface BorderModalProps {
   sessionId?: number;
   initialCode?: string;
-  onApply: (borderUrl: string, usedCode?: string) => void;
+  onApply: (borderUrl: string, newBorder?: SavedBorder, usedCode?: string) => void;
   onClose: () => void;
 }
 
@@ -25,13 +25,6 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
   const [color, setColor] = useState("warm tones");
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
-  const [savedBorders, setSavedBorders] = useState<SavedBorder[]>([]);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (!sessionId) return;
-    getSessionBorders(sessionId).then(setSavedBorders);
-  }, [sessionId]);
 
   const handleGenerate = async () => {
     if (!code.trim()) return;
@@ -48,10 +41,7 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
         prompt,
         created_at: new Date().toISOString(),
       };
-      setSavedBorders((prev) => [newBorder, ...prev]);
-      setSelectedId(data.borderId);
-      setStatus("idle");
-      onApply(data.borderDataUrl, code.trim().toUpperCase());
+      onApply(data.borderDataUrl, newBorder, code.trim().toUpperCase());
     } catch (err) {
       const httpStatus = err instanceof ApiError ? err.status : 0;
       setErrorMsg(ERROR_MESSAGES[httpStatus] ?? "Something went wrong. Try again.");
@@ -59,14 +49,9 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
     }
   };
 
-  const handlePickSaved = (border: SavedBorder) => {
-    setSelectedId(border.id);
-    onApply(border.border_path);
-  };
-
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-card sketch-card border-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-card sketch-card" onClick={(e) => e.stopPropagation()}>
         <h2>Generate AI Border</h2>
 
         <div className="generate-boarder-input-container">
@@ -124,24 +109,6 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
           >
             {status === "loading" ? "Generating..." : "Generate"}
           </SketchButton>
-        </div>
-
-        <div className="border-tray">
-          <p className="border-tray-label">
-            {savedBorders.length > 0 ? "Generated frames — click to apply" : "No frames yet"}
-          </p>
-          <div className="border-tray-scroll">
-            {savedBorders.map((b) => (
-              <img
-                key={b.id}
-                src={b.border_path}
-                alt={b.prompt ?? "border"}
-                className={`border-tray-thumb${selectedId === b.id ? " selected" : ""}`}
-                title={b.prompt ?? undefined}
-                onClick={() => handlePickSaved(b)}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </div>
