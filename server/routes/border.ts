@@ -22,9 +22,18 @@ router.get("/session/:sessionId", (req: Request, res: Response) => {
     return;
   }
 
-  const borders = db
+  const rows = db
     .prepare("SELECT * FROM borders WHERE session_id = ? ORDER BY created_at DESC")
     .all(sessionId) as Border[];
+
+  const borders = rows.map((b) => ({
+    id: b.id,
+    sessionId: b.session_id,
+    borderDataUrl: b.border_path,
+    borderPath: b.border_path,
+    prompt: b.prompt,
+    createdAt: b.created_at,
+  }));
 
   res.json({ borders });
 });
