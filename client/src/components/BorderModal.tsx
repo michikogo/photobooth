@@ -36,10 +36,11 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
       const data = await generateBorder(code.trim().toUpperCase(), prompt, sessionId);
       const newBorder: SavedBorder = {
         id: data.borderId,
-        session_id: sessionId ?? null,
-        border_path: data.borderPath,
+        sessionId: sessionId ?? null,
+        borderDataUrl: data.borderDataUrl,
+        borderPath: data.borderPath,
         prompt,
-        created_at: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
       };
       onApply(data.borderDataUrl, newBorder, code.trim().toUpperCase());
     } catch (err) {

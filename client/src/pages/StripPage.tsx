@@ -65,7 +65,7 @@ const StripPage = () => {
 
   const handlePickFrame = (border: SavedBorder) => {
     setSelectedBorderId(border.id);
-    applyBorder(border.border_path);
+    applyBorder(border.borderDataUrl);
   };
 
   return (
@@ -77,7 +77,7 @@ const StripPage = () => {
           savedBorders.map((b) => (
             <img
               key={b.id}
-              src={b.border_path}
+              src={b.borderDataUrl}
               alt={b.prompt ?? "frame"}
               className={`frames-tray-thumb${selectedBorderId === b.id ? " selected" : ""}`}
               title={b.prompt ?? undefined}

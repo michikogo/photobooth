@@ -15,10 +15,11 @@ interface BorderResponse {
 
 export interface SavedBorder {
   id: number;
-  session_id: number | null;
-  border_path: string;
+  sessionId: number | null;
+  borderDataUrl: string;
+  borderPath: string;
   prompt: string | null;
-  created_at: string;
+  createdAt: string;
 }
 
 export const saveStrip = async (stripDataUrl: string): Promise<SaveStripResponse> => {
