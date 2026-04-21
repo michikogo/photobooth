@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { compositeStrip } from "../utils/compositeStrip";
 import { saveStrip } from "../utils/api";
 import EmailModal from "../components/EmailModal";
+import BorderModal from "../components/BorderModal";
 import SketchButton from "../components/SketchButton";
 
 const StripPage = () => {
@@ -13,7 +14,10 @@ const StripPage = () => {
   const navigateRef = useRef(navigate);
 
   const [stripDataUrl, setStripDataUrl] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<number | undefined>(undefined);
+  const [borderDataUrl, setBorderDataUrl] = useState<string | null>(null);
   const [showEmail, setShowEmail] = useState(false);
+  const [showBorder, setShowBorder] = useState(false);
 
   useEffect(() => {
     const currentPhotos = photosRef.current;
@@ -24,7 +28,9 @@ const StripPage = () => {
 
     compositeStrip(currentPhotos).then((dataUrl) => {
       setStripDataUrl(dataUrl);
-      saveStrip(dataUrl).catch(() => {});
+      saveStrip(dataUrl)
+        .then((res) => setSessionId(res.sessionId))
+        .catch(() => {});
     });
   }, []);
 
@@ -34,6 +40,12 @@ const StripPage = () => {
     a.href = stripDataUrl;
     a.download = "photobooth-strip.png";
     a.click();
+  };
+
+  const handleApplyBorder = (url: string) => {
+    setBorderDataUrl(url);
+    setShowBorder(false);
+    compositeStrip(photosRef.current, { borderDataUrl: url }).then(setStripDataUrl);
   };
 
   return (
@@ -54,11 +66,22 @@ const StripPage = () => {
         <SketchButton onClick={() => setShowEmail(true)} disabled={!stripDataUrl}>
           ✉ Email
         </SketchButton>
+        <SketchButton onClick={() => setShowBorder(true)} disabled={!stripDataUrl}>
+          {borderDataUrl ? "✦ Regenerate Border" : "✦ Generate AI Border"}
+        </SketchButton>
         <SketchButton onClick={() => navigate("/")}>← Back</SketchButton>
       </div>
 
       {showEmail && stripDataUrl && (
         <EmailModal stripDataUrl={stripDataUrl} onClose={() => setShowEmail(false)} />
+      )}
+
+      {showBorder && (
+        <BorderModal
+          sessionId={sessionId}
+          onApply={handleApplyBorder}
+          onClose={() => setShowBorder(false)}
+        />
       )}
     </div>
   );
