@@ -26,9 +26,16 @@ router.post("/", async (req: Request, res: Response) => {
     return;
   }
 
+  // Allow the same session to re-roll (different seed) without a new code
   if (row.used_at !== null) {
-    res.status(409).json({ error: "Code has already been used" });
-    return;
+    const sameSession =
+      sessionId !== undefined &&
+      row.used_by_session_id !== null &&
+      row.used_by_session_id === sessionId;
+    if (!sameSession) {
+      res.status(409).json({ error: "Code has already been used" });
+      return;
+    }
   }
 
   const expired = db
@@ -42,9 +49,10 @@ router.post("/", async (req: Request, res: Response) => {
 
   const finalPrompt = prompt?.trim() || DEFAULT_PROMPT;
   const encodedPrompt = encodeURIComponent(finalPrompt);
+  const seed = Math.floor(Math.random() * 2 ** 32);
   const key = process.env.POLLINATIONS_KEY;
   const keyParam = key ? `&key=${key}` : "";
-  const url = `https://gen.pollinations.ai/image/${encodedPrompt}?model=flux&width=600&height=1800&seed=0&enhance=false${keyParam}`;
+  const url = `https://gen.pollinations.ai/image/${encodedPrompt}?model=flux&width=600&height=1800&seed=${seed}&enhance=false${keyParam}`;
 
   const imageRes = await fetch(url);
   if (!imageRes.ok) {
