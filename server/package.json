@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --exec tsx index.ts",
+    "generate-codes": "tsx scripts/generate-codes.ts",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
