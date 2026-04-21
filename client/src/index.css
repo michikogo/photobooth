@@ -551,6 +551,53 @@ body {
   font-size: 1rem;
 }
 
+/* ── Frames tray (left panel on StripPage) ── */
+.frames-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  overflow-y: auto;
+  max-height: 80svh;
+  padding: 0.5rem 0.25rem;
+}
+
+.frames-tray-empty {
+  font-size: 0.85rem;
+  opacity: 0.4;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+.frames-tray-thumb {
+  width: 36px;
+  height: 108px;
+  object-fit: cover;
+  border: 2.5px solid var(--ink);
+  border-radius: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition:
+    opacity 0.1s,
+    box-shadow 0.1s,
+    transform 0.1s;
+}
+
+.frames-tray-thumb:hover {
+  opacity: 1;
+  box-shadow: var(--shadow);
+  transform: translateX(2px);
+}
+
+.frames-tray-thumb.selected {
+  opacity: 1;
+  border-color: var(--accent);
+  box-shadow: 2px 2px 0 var(--accent);
+}
+
 .generate-boarder-input-container {
   display: flex;
   gap: 12px;

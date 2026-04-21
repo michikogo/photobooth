@@ -1,11 +1,42 @@
 import { Router, type Request, type Response } from "express";
+import { randomUUID } from "node:crypto";
+import { writeFileSync, mkdirSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import db from "../db.ts";
-import type { Code } from "../db.ts";
+import type { Code, Border } from "../db.ts";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const bordersDir = join(__dirname, "..", "uploads", "borders");
+mkdirSync(bordersDir, { recursive: true });
 
 const router = Router();
 
 const DEFAULT_PROMPT =
   "photo booth border frame, birthday, vintage, warm tones, decorative, no people";
+
+router.get("/session/:sessionId", (req: Request, res: Response) => {
+  const sessionId = parseInt(req.params.sessionId, 10);
+  if (isNaN(sessionId)) {
+    res.status(400).json({ error: "invalid sessionId" });
+    return;
+  }
+
+  const rows = db
+    .prepare("SELECT * FROM borders WHERE session_id = ? ORDER BY created_at DESC")
+    .all(sessionId) as Border[];
+
+  const borders = rows.map((b) => ({
+    id: b.id,
+    sessionId: b.session_id,
+    borderDataUrl: b.border_path,
+    borderPath: b.border_path,
+    prompt: b.prompt,
+    createdAt: b.created_at,
+  }));
+
+  res.json({ borders });
+});
 
 router.post("/", async (req: Request, res: Response) => {
   const { code, prompt, sessionId } = req.body as {
@@ -62,14 +93,24 @@ router.post("/", async (req: Request, res: Response) => {
 
   const buffer = await imageRes.arrayBuffer();
   const contentType = imageRes.headers.get("content-type") ?? "image/jpeg";
-  const base64 = Buffer.from(buffer).toString("base64");
-  const borderDataUrl = `data:${contentType};base64,${base64}`;
+  const ext = contentType.includes("png") ? "png" : "jpg";
+  const filename = `${randomUUID()}.${ext}`;
+  const borderPath = `/uploads/borders/${filename}`;
+
+  writeFileSync(join(bordersDir, filename), Buffer.from(buffer));
 
   db.prepare(
     "UPDATE codes SET used_at = datetime('now'), used_by_session_id = ? WHERE code = ?",
   ).run(sessionId ?? null, code);
 
-  res.json({ borderDataUrl });
+  const result = db
+    .prepare("INSERT INTO borders (session_id, border_path, prompt) VALUES (?, ?, ?)")
+    .run(sessionId ?? null, borderPath, finalPrompt);
+
+  const base64 = Buffer.from(buffer).toString("base64");
+  const borderDataUrl = `data:${contentType};base64,${base64}`;
+
+  res.json({ borderDataUrl, borderPath, borderId: result.lastInsertRowid });
 });
 
 export default router;

@@ -9,7 +9,17 @@ interface EmailResponse {
 
 interface BorderResponse {
   borderDataUrl: string;
-  error?: string;
+  borderPath: string;
+  borderId: number;
+}
+
+export interface SavedBorder {
+  id: number;
+  sessionId: number | null;
+  borderDataUrl: string;
+  borderPath: string;
+  prompt: string | null;
+  createdAt: string;
 }
 
 export const saveStrip = async (stripDataUrl: string): Promise<SaveStripResponse> => {
@@ -30,6 +40,13 @@ export const sendEmail = async (email: string, stripDataUrl: string): Promise<Em
   });
   if (!res.ok) throw new Error("Failed to send email");
   return res.json() as Promise<EmailResponse>;
+};
+
+export const getSessionBorders = async (sessionId: number): Promise<SavedBorder[]> => {
+  const res = await fetch(`/api/border/session/${sessionId}`);
+  if (!res.ok) return [];
+  const data = (await res.json()) as { borders: SavedBorder[] };
+  return data.borders;
 };
 
 export class ApiError extends Error {

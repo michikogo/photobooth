@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { generateBorder, ApiError } from "../utils/api";
+import type { SavedBorder } from "../utils/api";
 import SketchButton from "./SketchButton";
 
 type Status = "idle" | "loading" | "error";
@@ -7,7 +8,7 @@ type Status = "idle" | "loading" | "error";
 interface BorderModalProps {
   sessionId?: number;
   initialCode?: string;
-  onApply: (borderDataUrl: string, usedCode: string) => void;
+  onApply: (borderUrl: string, newBorder?: SavedBorder, usedCode?: string) => void;
   onClose: () => void;
 }
 
@@ -33,10 +34,18 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
     const prompt = `photo booth border frame, ${occasion}, ${vibe}, ${color}, decorative, no people`;
     try {
       const data = await generateBorder(code.trim().toUpperCase(), prompt, sessionId);
-      onApply(data.borderDataUrl, code.trim().toUpperCase());
+      const newBorder: SavedBorder = {
+        id: data.borderId,
+        sessionId: sessionId ?? null,
+        borderDataUrl: data.borderDataUrl,
+        borderPath: data.borderPath,
+        prompt,
+        createdAt: new Date().toISOString(),
+      };
+      onApply(data.borderDataUrl, newBorder, code.trim().toUpperCase());
     } catch (err) {
-      const status = err instanceof ApiError ? err.status : 0;
-      setErrorMsg(ERROR_MESSAGES[status] ?? "Something went wrong. Try again.");
+      const httpStatus = err instanceof ApiError ? err.status : 0;
+      setErrorMsg(ERROR_MESSAGES[httpStatus] ?? "Something went wrong. Try again.");
       setStatus("error");
     }
   };
@@ -60,9 +69,9 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
         <div className="generate-boarder-input-container">
           <label className="generate-boarder-label">Occasion: </label>
           <input
-            className="sketch-input generate-boarder-flex-1-input"
+            className="sketch-input"
             type="text"
-            placeholder="Occasion (e.g. birthday)"
+            placeholder="e.g. birthday"
             value={occasion}
             onChange={(e) => setOccasion(e.target.value)}
           />
@@ -73,7 +82,7 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
           <input
             className="sketch-input"
             type="text"
-            placeholder="Vibe (e.g. vintage)"
+            placeholder="e.g. vintage"
             value={vibe}
             onChange={(e) => setVibe(e.target.value)}
           />
@@ -84,7 +93,7 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
           <input
             className="sketch-input"
             type="text"
-            placeholder="Color (e.g. warm tones)"
+            placeholder="e.g. warm tones"
             value={color}
             onChange={(e) => setColor(e.target.value)}
           />

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { compositeStrip } from "../utils/compositeStrip";
-import { saveStrip } from "../utils/api";
+import { saveStrip, getSessionBorders } from "../utils/api";
+import type { SavedBorder } from "../utils/api";
 import EmailModal from "../components/EmailModal";
 import BorderModal from "../components/BorderModal";
 import SketchButton from "../components/SketchButton";
@@ -15,7 +16,8 @@ const StripPage = () => {
 
   const [stripDataUrl, setStripDataUrl] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<number | undefined>(undefined);
-  const [borderDataUrl, setBorderDataUrl] = useState<string | null>(null);
+  const [savedBorders, setSavedBorders] = useState<SavedBorder[]>([]);
+  const [selectedBorderId, setSelectedBorderId] = useState<number | null>(null);
   const [lastBorderCode, setLastBorderCode] = useState<string | undefined>(undefined);
   const [showEmail, setShowEmail] = useState(false);
   const [showBorder, setShowBorder] = useState(false);
@@ -30,7 +32,11 @@ const StripPage = () => {
     compositeStrip(currentPhotos).then((dataUrl) => {
       setStripDataUrl(dataUrl);
       saveStrip(dataUrl)
-        .then((res) => setSessionId(res.sessionId))
+        .then((res) => {
+          setSessionId(res.sessionId);
+          return getSessionBorders(res.sessionId);
+        })
+        .then(setSavedBorders)
         .catch(() => {});
     });
   }, []);
@@ -43,15 +49,44 @@ const StripPage = () => {
     a.click();
   };
 
-  const handleApplyBorder = (url: string, usedCode: string) => {
-    setBorderDataUrl(url);
-    setLastBorderCode(usedCode);
-    setShowBorder(false);
+  const applyBorder = (url: string) => {
     compositeStrip(photosRef.current, { borderDataUrl: url }).then(setStripDataUrl);
+  };
+
+  const handleApplyBorder = (url: string, newBorder?: SavedBorder, usedCode?: string) => {
+    if (usedCode) setLastBorderCode(usedCode);
+    if (newBorder) {
+      setSavedBorders((prev) => [newBorder, ...prev]);
+      setSelectedBorderId(newBorder.id);
+    }
+    setShowBorder(false);
+    applyBorder(url);
+  };
+
+  const handlePickFrame = (border: SavedBorder) => {
+    setSelectedBorderId(border.id);
+    applyBorder(border.borderDataUrl);
   };
 
   return (
     <div className="page strip-page">
+      <div className="frames-tray">
+        {savedBorders.length === 0 ? (
+          <p className="frames-tray-empty">No frames yet</p>
+        ) : (
+          savedBorders.map((b) => (
+            <img
+              key={b.id}
+              src={b.borderDataUrl}
+              alt={b.prompt ?? "frame"}
+              className={`frames-tray-thumb${selectedBorderId === b.id ? " selected" : ""}`}
+              title={b.prompt ?? undefined}
+              onClick={() => handlePickFrame(b)}
+            />
+          ))
+        )}
+      </div>
+
       <div className="strip-wrap">
         {stripDataUrl ? (
           <img src={stripDataUrl} alt="Photo strip" className="strip-img" />
@@ -69,7 +104,7 @@ const StripPage = () => {
           ✉ Email
         </SketchButton>
         <SketchButton onClick={() => setShowBorder(true)} disabled={!stripDataUrl}>
-          {borderDataUrl ? "✦ Regenerate Border" : "✦ Generate AI Border"}
+          {savedBorders.length > 0 ? "✦ New Border" : "✦ Generate AI Border"}
         </SketchButton>
         <SketchButton onClick={() => navigate("/")}>← Back</SketchButton>
       </div>
