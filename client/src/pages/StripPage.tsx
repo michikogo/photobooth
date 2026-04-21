@@ -43,9 +43,9 @@ const StripPage = () => {
     a.click();
   };
 
-  const handleApplyBorder = (url: string, usedCode: string) => {
+  const handleApplyBorder = (url: string, usedCode?: string) => {
     setBorderDataUrl(url);
-    setLastBorderCode(usedCode);
+    if (usedCode) setLastBorderCode(usedCode);
     setShowBorder(false);
     compositeStrip(photosRef.current, { borderDataUrl: url }).then(setStripDataUrl);
   };
