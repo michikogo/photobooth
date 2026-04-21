@@ -11,6 +11,15 @@ export interface Session {
   email_to: string | null;
 }
 
+export interface Code {
+  id: number;
+  code: string;
+  created_at: string;
+  expires_at: string;
+  used_at: string | null;
+  used_by_session_id: number | null;
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const dataDir = join(__dirname, "data");
 
@@ -25,6 +34,17 @@ db.exec(`
     strip_path TEXT,
     email_sent INTEGER NOT NULL DEFAULT 0,
     email_to   TEXT
+  )
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS codes (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    code                TEXT    NOT NULL UNIQUE,
+    created_at          TEXT    NOT NULL DEFAULT (datetime('now')),
+    expires_at          TEXT    NOT NULL,
+    used_at             TEXT,
+    used_by_session_id  INTEGER REFERENCES sessions(id)
   )
 `);
 
