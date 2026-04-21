@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon --exec tsx index.ts",
+    "dev": "tsx watch index.ts",
     "generate-codes": "tsx scripts/generate-codes.ts",
     "lint": "eslint .",
     "format": "prettier --write ."
@@ -23,7 +23,6 @@
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.5.0",
-    "nodemon": "^3.1.4",
     "prettier": "^3.8.3",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
