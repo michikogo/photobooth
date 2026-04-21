@@ -16,6 +16,7 @@ const StripPage = () => {
   const [stripDataUrl, setStripDataUrl] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<number | undefined>(undefined);
   const [borderDataUrl, setBorderDataUrl] = useState<string | null>(null);
+  const [lastBorderCode, setLastBorderCode] = useState<string | undefined>(undefined);
   const [showEmail, setShowEmail] = useState(false);
   const [showBorder, setShowBorder] = useState(false);
 
@@ -42,8 +43,9 @@ const StripPage = () => {
     a.click();
   };
 
-  const handleApplyBorder = (url: string) => {
+  const handleApplyBorder = (url: string, usedCode: string) => {
     setBorderDataUrl(url);
+    setLastBorderCode(usedCode);
     setShowBorder(false);
     compositeStrip(photosRef.current, { borderDataUrl: url }).then(setStripDataUrl);
   };
@@ -79,6 +81,7 @@ const StripPage = () => {
       {showBorder && (
         <BorderModal
           sessionId={sessionId}
+          initialCode={lastBorderCode}
           onApply={handleApplyBorder}
           onClose={() => setShowBorder(false)}
         />

@@ -6,7 +6,8 @@ type Status = "idle" | "loading" | "error";
 
 interface BorderModalProps {
   sessionId?: number;
-  onApply: (borderDataUrl: string) => void;
+  initialCode?: string;
+  onApply: (borderDataUrl: string, usedCode: string) => void;
   onClose: () => void;
 }
 
@@ -16,8 +17,8 @@ const ERROR_MESSAGES: Record<number, string> = {
   410: "Code has expired.",
 };
 
-const BorderModal = ({ sessionId, onApply, onClose }: BorderModalProps) => {
-  const [code, setCode] = useState("");
+const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalProps) => {
+  const [code, setCode] = useState(initialCode ?? "");
   const [occasion, setOccasion] = useState("birthday");
   const [vibe, setVibe] = useState("vintage");
   const [color, setColor] = useState("warm tones");
@@ -43,7 +44,7 @@ const BorderModal = ({ sessionId, onApply, onClose }: BorderModalProps) => {
     }
 
     const data = (await res.json()) as { borderDataUrl: string };
-    onApply(data.borderDataUrl);
+    onApply(data.borderDataUrl, code.trim().toUpperCase());
   };
 
   return (
@@ -51,37 +52,49 @@ const BorderModal = ({ sessionId, onApply, onClose }: BorderModalProps) => {
       <div className="modal-card sketch-card" onClick={(e) => e.stopPropagation()}>
         <h2>Generate AI Border</h2>
 
-        <input
-          className="sketch-input"
-          type="text"
-          placeholder="Enter your code"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-        />
+        <div className="generate-boarder-input-container">
+          <label className="generate-boarder-label">Code: </label>
+          <input
+            className="sketch-input"
+            type="text"
+            placeholder="Enter your code"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+        </div>
 
-        <input
-          className="sketch-input"
-          type="text"
-          placeholder="Occasion (e.g. birthday)"
-          value={occasion}
-          onChange={(e) => setOccasion(e.target.value)}
-        />
+        <div className="generate-boarder-input-container">
+          <label className="generate-boarder-label">Occasion: </label>
+          <input
+            className="sketch-input generate-boarder-flex-1-input"
+            type="text"
+            placeholder="Occasion (e.g. birthday)"
+            value={occasion}
+            onChange={(e) => setOccasion(e.target.value)}
+          />
+        </div>
 
-        <input
-          className="sketch-input"
-          type="text"
-          placeholder="Vibe (e.g. vintage)"
-          value={vibe}
-          onChange={(e) => setVibe(e.target.value)}
-        />
+        <div className="generate-boarder-input-container">
+          <label className="generate-boarder-label">Vibe: </label>
+          <input
+            className="sketch-input"
+            type="text"
+            placeholder="Vibe (e.g. vintage)"
+            value={vibe}
+            onChange={(e) => setVibe(e.target.value)}
+          />
+        </div>
 
-        <input
-          className="sketch-input"
-          type="text"
-          placeholder="Color (e.g. warm tones)"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-        />
+        <div className="generate-boarder-input-container">
+          <label className="generate-boarder-label">Color: </label>
+          <input
+            className="sketch-input"
+            type="text"
+            placeholder="Color (e.g. warm tones)"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+          />
+        </div>
 
         {status === "error" && <p className="modal-error">{errorMsg}</p>}
 
