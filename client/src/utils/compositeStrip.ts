@@ -1,12 +1,10 @@
 const STRIP_W = 600;
 const STRIP_H = 1800;
-const PAD_X = 20;
-const PAD_Y = 20;
 const GAP = 10;
 const LABEL_H = 60;
 
-const PHOTO_W = STRIP_W - PAD_X * 2;
-const PHOTO_H = Math.round((STRIP_H - PAD_Y * 2 - GAP * 3 - LABEL_H) / 4);
+const PAD_DEFAULT = { x: 20, y: 20 };
+const PAD_BORDER = { x: 40, y: 50 };
 
 const loadImage = (src: string): Promise<HTMLImageElement> =>
   new Promise((resolve) => {
@@ -36,7 +34,14 @@ const drawCover = (
   ctx.restore();
 };
 
-export const compositeStrip = async (photos: string[]): Promise<string> => {
+export const compositeStrip = async (
+  photos: string[],
+  options?: { borderDataUrl?: string },
+): Promise<string> => {
+  const pad = options?.borderDataUrl ? PAD_BORDER : PAD_DEFAULT;
+  const photoW = STRIP_W - pad.x * 2;
+  const photoH = Math.round((STRIP_H - pad.y * 2 - GAP * 3 - LABEL_H) / 4);
+
   const images = await Promise.all(photos.map(loadImage));
 
   const canvas = document.createElement("canvas");
@@ -46,15 +51,20 @@ export const compositeStrip = async (photos: string[]): Promise<string> => {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Could not get canvas context");
 
-  ctx.fillStyle = "#1a1a2e";
-  ctx.fillRect(0, 0, STRIP_W, STRIP_H);
+  if (options?.borderDataUrl) {
+    const border = await loadImage(options.borderDataUrl);
+    ctx.drawImage(border, 0, 0, STRIP_W, STRIP_H);
+  } else {
+    ctx.fillStyle = "#1a1a2e";
+    ctx.fillRect(0, 0, STRIP_W, STRIP_H);
+  }
 
   await document.fonts.load("700 16px Caveat");
 
   images.forEach((img, i) => {
-    const x = PAD_X;
-    const y = PAD_Y + i * (PHOTO_H + GAP);
-    drawCover(ctx, img, x, y, PHOTO_W, PHOTO_H);
+    const x = pad.x;
+    const y = pad.y + i * (photoH + GAP);
+    drawCover(ctx, img, x, y, photoW, photoH);
   });
 
   const labelY = STRIP_H - LABEL_H + 18;
