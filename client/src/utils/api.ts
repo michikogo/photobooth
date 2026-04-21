@@ -32,6 +32,14 @@ export const sendEmail = async (email: string, stripDataUrl: string): Promise<Em
   return res.json() as Promise<EmailResponse>;
 };
 
+export class ApiError extends Error {
+  status: number;
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
+
 export const generateBorder = async (
   code: string,
   prompt: string,
@@ -42,5 +50,9 @@ export const generateBorder = async (
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code, prompt, sessionId }),
   });
+  if (!res.ok) {
+    const body = (await res.json().catch(() => ({}))) as { error?: string };
+    throw new ApiError(res.status, body.error ?? "Something went wrong");
+  }
   return res.json() as Promise<BorderResponse>;
 };

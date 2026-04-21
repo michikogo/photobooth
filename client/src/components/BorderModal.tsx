@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { generateBorder } from "../utils/api";
+import { generateBorder, ApiError } from "../utils/api";
 import SketchButton from "./SketchButton";
 
 type Status = "idle" | "loading" | "error";
@@ -31,20 +31,14 @@ const BorderModal = ({ sessionId, initialCode, onApply, onClose }: BorderModalPr
     setErrorMsg("");
 
     const prompt = `photo booth border frame, ${occasion}, ${vibe}, ${color}, decorative, no people`;
-    const res = await fetch("/api/border", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: code.trim().toUpperCase(), prompt, sessionId }),
-    });
-
-    if (!res.ok) {
-      setErrorMsg(ERROR_MESSAGES[res.status] ?? "Something went wrong. Try again.");
+    try {
+      const data = await generateBorder(code.trim().toUpperCase(), prompt, sessionId);
+      onApply(data.borderDataUrl, code.trim().toUpperCase());
+    } catch (err) {
+      const status = err instanceof ApiError ? err.status : 0;
+      setErrorMsg(ERROR_MESSAGES[status] ?? "Something went wrong. Try again.");
       setStatus("error");
-      return;
     }
-
-    const data = (await res.json()) as { borderDataUrl: string };
-    onApply(data.borderDataUrl, code.trim().toUpperCase());
   };
 
   return (
