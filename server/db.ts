@@ -20,6 +20,14 @@ export interface Code {
   used_by_session_id: number | null;
 }
 
+export interface Border {
+  id: number;
+  session_id: number | null;
+  border_path: string;
+  prompt: string | null;
+  created_at: string;
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const dataDir = join(__dirname, "data");
 
@@ -45,6 +53,16 @@ db.exec(`
     expires_at          TEXT    NOT NULL,
     used_at             TEXT,
     used_by_session_id  INTEGER REFERENCES sessions(id)
+  )
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS borders (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id  INTEGER REFERENCES sessions(id),
+    border_path TEXT    NOT NULL,
+    prompt      TEXT,
+    created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
   )
 `);
 
