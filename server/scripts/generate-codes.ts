@@ -28,9 +28,7 @@ const randomSegment = (len: number) =>
 
 const generateCode = () => `PHOTO-${randomSegment(4)}-${randomSegment(4)}`;
 
-const insert = db.prepare(
-  "INSERT INTO codes (code, expires_at) VALUES (?, ?)",
-);
+const insert = db.prepare("INSERT INTO codes (code, expires_at) VALUES (?, ?)");
 
 for (let i = 0; i < count; i++) {
   let code: string;
