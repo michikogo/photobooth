@@ -19,9 +19,7 @@ router.post("/", async (req: Request, res: Response) => {
     return;
   }
 
-  const row = db
-    .prepare("SELECT * FROM codes WHERE code = ?")
-    .get(code) as Code | undefined;
+  const row = db.prepare("SELECT * FROM codes WHERE code = ?").get(code) as Code | undefined;
 
   if (!row) {
     res.status(404).json({ error: "Code not found" });
